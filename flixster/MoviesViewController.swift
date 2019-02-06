@@ -23,7 +23,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.delegate = self
 
         // Do any additional setup after loading the view.
-        print("Hello!")
         
         
         let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")!
@@ -58,8 +57,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) ->
         UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell") as!
-            MovieCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell") as! MovieCell
         
         let movie = movies[indexPath.row]
         // casting title as! type String
@@ -73,19 +71,33 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let posterPath = movie["poster_path"] as! String
         let posterUrl = URL(string: baseUrl + posterPath)
         
-            cell.posterView.af_setImage(withURL: posterUrl!)
+        cell.posterView.af_setImage(withURL: posterUrl!)
             
         return cell;
     }
     
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        print("loading up the details")
+        
+        // Find the selected movie
+        let cell = sender as! UITableViewCell
+        let indexPath = tableView.indexPath(for: cell)!
+        let movie = movies[indexPath.row]
+        
+        // Pass the selected movie to the details view controller
+        let detailViewController = segue.destination as! MovieDetailViewController
+        
+        detailViewController.movie = movie
+        
+        // When you move back a page your previous location will not be selected anymore!
+        tableView.deselectRow(at: indexPath, animated: true)
     }
-    */
+    
 
 }
